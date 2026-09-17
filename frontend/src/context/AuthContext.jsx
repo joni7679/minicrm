@@ -2,13 +2,12 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 axios.defaults.withCredentials = true
-
 export const AuthConext = createContext();
 function AuthConextProvider({ children }) {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false)
-    const [authLoader, setAuthLoader] = useState(true);
+    const [authLoader, setAuthLoader] = useState(false);
     const backendApi = import.meta.env.VITE_BACKEND_URL;
     const registerUser = async ({ name, email, password }) => {
         setLoading(true);
@@ -48,12 +47,12 @@ function AuthConextProvider({ children }) {
             setLoading(false)
         }
     };
-
     const userProfile = async () => {
         try {
-            authLoader(true)
+            setAuthLoader(true);
             const res = await axios.get(`${backendApi}/auth/profile`);
-            const finalRes = res.data;
+            const finalRes = res.data.data;
+            console.log(finalRes)
             setUser(finalRes);
             return finalRes
         } catch (error) {
@@ -76,20 +75,9 @@ function AuthConextProvider({ children }) {
         }
     }
     useEffect(() => {
-        const checkAuthStatus = async () => {
-            try {
-                if (user) {
-                    await userProfile()
-                }
-            } catch (error) {
-                console.log("user not founded", error)
-            }
-            finally {
-                setAuthLoader(false)
-            }
-        }
-        checkAuthStatus()
-    }, [])
+        userProfile()
+    }, []);
+
     return <AuthConext.Provider value={{ registerUser, authLoader, loading, error, LoginUser, userProfile, user, LogOutuser, }}>
         {children}
     </AuthConext.Provider>

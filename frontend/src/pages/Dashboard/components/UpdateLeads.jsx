@@ -113,7 +113,7 @@ const UpdateLeads = () => {
           onSubmit={handleSubmit}
           className="bg-white border border-slate-200 rounded-xl shadow-sm p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
         >
-          <InputField label="Full Name" name="name" value={form.name} onChange={handleChange} placeholder="e.g. John Doe" />
+          <InputField label="Full Name" name="name" value={form.name} onChange={handleChange} placeholder="enter your name" />
           <InputField label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="10-digit mobile number" />
           <InputField label="Email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="e.g. john@example.com" />
           <InputField label="Company" name="company" value={form.company} onChange={handleChange} placeholder="e.g. XYZ Company" />

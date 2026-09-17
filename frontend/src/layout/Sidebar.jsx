@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
     return (
         <>
-            <aside className="w-[264px] min-w-[264px] overflow-hidden opacity-100 transition-all duration-300 ease-in-out"
+            <aside className="w-[264px] min-w-[264px] z-50 overflow-hidden opacity-100 transition-all duration-300 ease-in-out"
                 id="sidebar" aria-label="Sidebar navigation">
                 <div id="sidebar-inner"
                     className="fixed top-0 left-0 w-[264px] h-full flex flex-col overflow-auto py-6 px-4 bg-white border-r border-slate-300">

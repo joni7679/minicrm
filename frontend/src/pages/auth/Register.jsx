@@ -3,7 +3,7 @@ import InputField from "../../components/InputField"
 import { AuthConext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -32,12 +32,10 @@ const Register = () => {
         <>
             <main className="px-4 md:px-8 min-h-screen flex flex-col items-center justify-center">
                 <div className="max-w-md w-full">
-
-
                     <div
                         className="p-6 rounded-lg bg-white border border-slate-300 shadow-xs md:p-6">
                         <h1 className="text-slate-900 text-center text-2xl font-bold">Create an account</h1>
-                        {error && <div className="p-2 bg-red-300 rounded-2xl mt-5">
+                        {error && <div className="sm:col-span-2 mt-5 text-sm  bg-red-50 border border-red-200 rounded-md px-3 py-2">
                             <p className="text-red-600">{error}</p>
                         </div>}
                         <form onSubmit={handleSubmit} className="space-y-6 mt-10">
@@ -61,9 +59,9 @@ const Register = () => {
                             </button>
                         </form>
 
-                        <div className="mt-6 text-slate-900 text-sm text-center">Already have an account? <a href="#"
+                        <div className="mt-6 text-slate-900 text-sm text-center">Already have an account? <Link to={"/login"}
                             className="text-blue-700 hover:underline ml-1 font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded">
-                            Login here</a>
+                            Login here</Link>
                         </div>
                     </div>
                 </div>

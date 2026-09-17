@@ -6,7 +6,7 @@ import LeadStats from '../pages/Dashboard/components/LeadStats';
 import LeadsTable from '../pages/Dashboard/components/LeadsTable';
 import LeadForm from '../leads/LeadForm';
 import UpdateLeads from '../pages/Dashboard/components/UpdateLeads';
-
+import ProtectedRoute from "../Router/ProtectedRoute"
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -18,15 +18,19 @@ export const router = createBrowserRouter([
     },
     {
         path: "dashboard",
-        element: <Dashbord />,
+        element: (
+            <ProtectedRoute>
+                <Dashbord />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 index: true,
                 element: <LeadStats />
             },
             {
-                path:"leads",
-                element:<LeadsTable/>
+                path: "leads",
+                element: <LeadsTable />
             },
             {
                 path: "addleads",
