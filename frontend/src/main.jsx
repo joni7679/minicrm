@@ -9,9 +9,8 @@ import LeadContextProvider from './context/LeadsContext.jsx'
 createRoot(document.getElementById('root')).render(
   <AuthConextProvider>
     <LeadContextProvider>
-      <RouterProvider router={router}>
-        <Toaster />
-      </RouterProvider>
+      <Toaster />
+      <RouterProvider router={router} />
     </LeadContextProvider>
   </AuthConextProvider>
 

@@ -2,7 +2,7 @@ import { Users, UserShield, Settings } from 'lucide-react';
 export const sidebardata = [
     {
         label: "dashboard",
-        link: "/",
+        link: "/dashboard",
         icon: Users
     },
     {

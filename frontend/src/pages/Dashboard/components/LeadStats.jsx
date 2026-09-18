@@ -1,4 +1,5 @@
-import React from "react";
+import { User2 } from "lucide-react";
+import React, { useContext } from "react";
 import {
     RiTeamLine,
     RiUserAddLine,
@@ -9,6 +10,7 @@ import {
     RiArrowUpLine,
     RiArrowDownLine,
 } from "react-icons/ri";
+import { useLeads } from "../../../context/LeadsContext";
 
 const stats = [
     {
@@ -68,20 +70,35 @@ const stats = [
 ];
 
 const LeadStats = () => {
+    const { leads = [] } = useLeads()
+
+    const totalLeads = leads.length;
+    const newLeads = leads.filter((lead) => lead.status === "new").length;
+    const conTactLeads = leads.filter((lead) => lead.status === "contacted").length
+    const interesledLeads = leads.filter((lead) => lead.status === "interested").length
+    const wonledLeads = leads.filter((lead) => lead.status === "won").length
+    const converledLeads = leads.filter((lead) => lead.status === "converted").length
+    const lostledLeads = leads.filter((lead) => lead.status === "converted").length
+
     return (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            <StatusCard title="total leads" value={totalLeads} icon={<User2 />} />
+            <StatusCard title="contact leads" value={conTactLeads} icon={<User2 />} />
+            <StatusCard title="new leads" value={newLeads} icon={<User2 />} />
+            <StatusCard title="interested leads" value={interesledLeads} icon={<User2 />} />
+            <StatusCard title="won leads" value={wonledLeads} icon={<User2 />} />
+            <StatusCard title="conver leads" value={converledLeads} icon={<User2 />} />
+            <StatusCard title="lost leads" value={lostledLeads} icon={<lostledLeads />} />
+        </div>
+    );
+};
 
-            {stats.map((item, index) => {
-                const Icon = item.icon;
-                const Arrow =
-                    item.direction === "up"
-                        ? RiArrowUpLine
-                        : RiArrowDownLine;
+export default LeadStats;
 
-                return (
-                    <div
-                        key={index}
-                        className="
+const StatusCard = ({ title, value }) => {
+    return (
+        <div
+            className="
               rounded-xl
               border border-slate-200
               bg-white
@@ -92,51 +109,36 @@ const LeadStats = () => {
               hover:-translate-y-0.5
               hover:shadow-md
             "
-                    >
-                        {/* Top */}
-                        <div className="flex items-start justify-between">
+        >
 
-                            <span className="text-[10px] font-medium tracking-wide text-slate-500">
-                                {item.title}
-                            </span>
+            <div className="flex items-start justify-between">
 
-                            <div
-                                className={`
+                <span className="text-[10px] font-medium tracking-wide text-slate-500">
+                    {title}
+                </span>
+
+                <div
+                    className={`
                   flex h-7 w-7 shrink-0
                   items-center justify-center
                   rounded-lg
-                  ${item.iconStyle}
+                  
                 `}
-                            >
-                                <Icon className="text-[16px]" />
-                            </div>
-
-                        </div>
-
-                        {/* Number */}
-                        <h2 className="mt-1 text-[28px] font-semibold leading-none text-slate-900">
-                            {item.value}
-                        </h2>
-
-                        {/* Change */}
-                        <div
-                            className={`
+                >
+                </div>
+            </div>
+            {/* Number */}
+            <h2 className="mt-1 text-[28px] font-semibold leading-none text-slate-900">
+                <span>{value}</span>
+            </h2>
+            <div
+                className={`
                 mt-2 flex items-center gap-0.5
                 text-[9px] font-medium
-                ${item.changeStyle}
+               
               `}
-                        >
-                            <Arrow className="text-[11px]" />
-
-                            <span>{item.change}</span>
-                        </div>
-
-                    </div>
-                );
-            })}
-
+            >
+            </div>
         </div>
-    );
-};
-
-export default LeadStats;
+    )
+}

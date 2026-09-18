@@ -7,7 +7,7 @@ function AuthConextProvider({ children }) {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false)
-    const [authLoader, setAuthLoader] = useState(false);
+    const [authLoader, setAuthLoader] = useState(true);
     const backendApi = import.meta.env.VITE_BACKEND_URL;
     const registerUser = async ({ name, email, password }) => {
         setLoading(true);
@@ -15,6 +15,7 @@ function AuthConextProvider({ children }) {
             const res = await axios.post(`${backendApi}/auth/register`, { name, email, password });
             const finalRes = res.data.data;
             console.log("res", finalRes)
+            setUser(finalRes);
             return finalRes;
         } catch (error) {
             const message = error.response?.data.message
@@ -33,7 +34,7 @@ function AuthConextProvider({ children }) {
         setLoading(true);
         try {
             const res = await axios.post(`${backendApi}/auth/login`, { email, password });
-            const finalRes = res.data;
+            const finalRes = res.data.data;
             console.log("res", finalRes)
             setUser(finalRes)
             return finalRes;
@@ -57,6 +58,7 @@ function AuthConextProvider({ children }) {
             return finalRes
         } catch (error) {
             console.warn(error.response?.data?.message)
+            setUser(null);
         } finally {
             setAuthLoader(false)
         }

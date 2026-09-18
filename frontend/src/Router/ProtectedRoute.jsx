@@ -6,10 +6,10 @@ const ProtectedRoute = ({ children }) => {
     if (authLoader) {
         return <div>Loading...</div>
     }
-    if (user) {
-        return children
+    if (!user) {
+        return <Navigate to="/login" replace />
     }
-    return <Navigate to="/login" replace />
+    return children
 }
 
 export default ProtectedRoute
