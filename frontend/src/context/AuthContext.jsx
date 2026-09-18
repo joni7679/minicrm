@@ -1,19 +1,18 @@
-import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-axios.defaults.withCredentials = true
+import api, { backendApi, saveToken, clearToken } from "../utils/api";
 export const AuthConext = createContext();
 function AuthConextProvider({ children }) {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false)
     const [authLoader, setAuthLoader] = useState(true);
-    const backendApi = import.meta.env.VITE_BACKEND_URL;
     const registerUser = async ({ name, email, password }) => {
         setLoading(true);
         try {
-            const res = await axios.post(`${backendApi}/auth/register`, { name, email, password });
+            const res = await api.post(`/auth/register`, { name, email, password });
             const finalRes = res.data.data;
+            if (res.data?.token) saveToken(res.data.token);
             console.log("res", finalRes)
             setUser(finalRes);
             return finalRes;
@@ -33,8 +32,9 @@ function AuthConextProvider({ children }) {
     const LoginUser = async ({ email, password }) => {
         setLoading(true);
         try {
-            const res = await axios.post(`${backendApi}/auth/login`, { email, password });
+            const res = await api.post(`/auth/login`, { email, password });
             const finalRes = res.data.data;
+            if (res.data?.token) saveToken(res.data.token);
             console.log("res", finalRes)
             setUser(finalRes)
             return finalRes;
@@ -51,14 +51,16 @@ function AuthConextProvider({ children }) {
     const userProfile = async () => {
         try {
             setAuthLoader(true);
-            const res = await axios.get(`${backendApi}/auth/profile`);
+            const res = await api.get(`/auth/profile`);
             const finalRes = res.data.data;
+            if (res.data?.token) saveToken(res.data.token);
             console.log(finalRes)
             setUser(finalRes);
             return finalRes
         } catch (error) {
             console.warn(error.response?.data?.message)
             setUser(null);
+            clearToken();
         } finally {
             setAuthLoader(false)
         }
@@ -66,9 +68,10 @@ function AuthConextProvider({ children }) {
     const LogOutuser = async () => {
         setLoading(true);
         try {
-            await axios.post(`${backendApi}/auth/logout`, {},);
+            await api.post(`/auth/logout`, {},);
             console.log("logout successfully");
             setUser(null)
+            clearToken();
         } catch (error) {
             setError(error.response?.data?.message)
             return null;

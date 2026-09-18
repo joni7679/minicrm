@@ -1,7 +1,8 @@
 const validator = require('validator');
 const userModel = require("../models/user.model");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const generateToken = require('../utils/generateToken');
+const { getCookieOptions, getClearCookieOptions } = require('../utils/cookieOptions');
 // Register logic here
 exports.userRegister = async (req, res) => {
     try {
@@ -49,13 +50,7 @@ exports.userRegister = async (req, res) => {
         const user = await userModel.create({ name, email, password: hashPassword });
         const token = generateToken(user._id, user.role);
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "none",
-            maxAge: 3 * 24 * 60 * 60 * 100,
-            path: "/"
-        })
+        res.cookie("token", token, getCookieOptions())
         return res.status(200).json({
             succcess: true,
             message: "Register SuccessFully",
@@ -103,13 +98,7 @@ exports.userLogin = async (req, res) => {
             })
         }
         const token = generateToken(user._id, user.role);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-             sameSite: "none",
-            maxAge: 3 * 24 * 60 * 60 * 100,
-            path: "/"
-        })
+        res.cookie("token", token, getCookieOptions())
         return res.status(200).json({
             success: true,
             message: "User Login SuccessFully",
@@ -127,23 +116,22 @@ exports.userLogin = async (req, res) => {
 // user profile logi here
 exports.userProfile = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id;
         if (!userId) {
             return res.status(404).json({
                 success: false,
                 message: "user id not found"
             })
         }
-        const user = await userModel.findById(userId);
-        const token = generateToken(user._id, user.role);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-           sameSite: "none",
-            maxAge: 3 * 24 * 60 * 60 * 100,
-            path: "/"
-        })
-        return res.status(201).json({
+        const user = await userModel.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+        return res.status(200).json({
+            success: true,
             message: "user profie fetch successfully",
             data: user
         })
@@ -156,13 +144,7 @@ exports.userProfile = async (req, res) => {
 }
 exports.userLogout = async (req, res) => {
     try {
-        res.clearCookie("token", {
-            httpOnly: true,
-            secure: false,
-            sameSite: "none",
-            maxAge: 3 * 24 * 60 * 60 * 100,
-            path: "/"
-        })
+        res.clearCookie("token", getClearCookieOptions())
         return res.status(200).json({
             success: true,
             message: "User log out successfully"

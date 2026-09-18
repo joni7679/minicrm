@@ -1,11 +1,9 @@
-import axios from "axios";
 import { createContext, useContext, useState } from "react";
-axios.defaults.withCredentials = true
+import api from "../utils/api";
 
 export const LeadContext = createContext(null);
 
 const LeadContextProvider = ({ children }) => {
-    const backendApi = import.meta.env.VITE_BACKEND_URL;
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [leads, setLeads] = useState([]);
@@ -22,7 +20,7 @@ const LeadContextProvider = ({ children }) => {
     const addLeads = async ({ name, phone, email, company, leadSource, status, notes }) => {
         setLoading(true);
         try {
-            const res = await axios.post(`${backendApi}/leads`, { name, phone, email, company, leadSource, status, notes });
+            const res = await api.post(`/leads`, { name, phone, email, company, leadSource, status, notes });
             const finalRes = res.data.data;
             setLeads((prev) => [finalRes, ...prev]);
             return finalRes;
@@ -38,7 +36,7 @@ const LeadContextProvider = ({ children }) => {
     const fetchLeads = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`${backendApi}/leads`);
+            const res = await api.get(`/leads`);
             const finalRes = res.data.data || [];
             setLeads(finalRes)
             return finalRes;
@@ -54,7 +52,7 @@ const LeadContextProvider = ({ children }) => {
     const updateLeads = async (id, data) => {
         setLoading(true);
         try {
-            const res = await axios.patch(`${backendApi}/leads/${id}`, data);
+            const res = await api.patch(`/leads/${id}`, data);
             const finalRes = res.data.data;
             setLeads((prev) => prev.map((l) => ((l._id || l.id) === id ? finalRes : l)));
             return finalRes
@@ -71,7 +69,7 @@ const LeadContextProvider = ({ children }) => {
     const deleteLeads = async (id) => {
         setLoading(true);
         try {
-            await axios.delete(`${backendApi}/leads/${id}`);
+            await api.delete(`/leads/${id}`);
             setLeads((prev) => prev.filter((l) => (l._id || l.id) !== id));
             return true;
         } catch (error) {
@@ -87,7 +85,7 @@ const LeadContextProvider = ({ children }) => {
     const singleByIdLeads = async (id) => {
         setLoading(true);
         try {
-            const res = await axios.get(`${backendApi}/leads/${id}`);
+            const res = await api.get(`/leads/${id}`);
             const finalRes = res.data.data;
             setLeadSingleData(finalRes);
             return finalRes
