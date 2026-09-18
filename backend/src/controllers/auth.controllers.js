@@ -106,7 +106,7 @@ exports.userLogin = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 3 * 24 * 60 * 60 * 100,
             path: "/"
         })
@@ -139,7 +139,7 @@ exports.userProfile = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: false,
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 3 * 24 * 60 * 60 * 100,
             path: "/"
         })
@@ -159,7 +159,7 @@ exports.userLogout = async (req, res) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: false,
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 3 * 24 * 60 * 60 * 100,
             path: "/"
         })
